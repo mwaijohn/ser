@@ -18,7 +18,11 @@
         document.getElementById('stream').addEventListener('click', () => {
             console.log("stream button clicked")
             if (navigator.serial) {
-                connectSerial();
+                setInterval(()=>{
+                    console.log("Serials connecting");
+                },1000);
+
+                streamSerial();
             } else {
                 alert('Web Serial API not supported.');
             }
@@ -46,7 +50,7 @@
             console.log(info);
         }
 
-        async function connectSerial() {
+        async function streamSerial() {
             const log = document.getElementById('target');
             // console.log(log)
             try {
