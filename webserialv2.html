@@ -12,10 +12,10 @@
 <body>
     <button id="connectButton">Connect via Serial Port</button>
     <button id="disconnectButton">Connect via Serial Port</button>
-    <button id="connectButton">Stream Serial Data </button>
+    <button id="stream">Stream Serial Data </button>
     <div id="target"></div>
     <script>
-        document.getElementById('connectButton').addEventListener('click', () => {
+        document.getElementById('stream').addEventListener('click', () => {
             if (navigator.serial) {
                 connectSerial();
             } else {
@@ -23,19 +23,32 @@
             }
         });
 
+        document.getElementById('connectButton').addEventListener('click', () => {
+            if (navigator.serial) {
+                connect();
+            } else {
+                alert('Web Serial API not supported.');
+            }
+        });
+
+
+
+
         let port;
         async function disconnectSerial() {
             port.close();
         }
+        async function connect() {
+            port = await navigator.serial.requestPort();
+            await port.open({ baudRate: 9600 });
+            const info = port.getInfo();
+            console.log(info);
+        }
+
         async function connectSerial() {
             const log = document.getElementById('target');
 
             try {
-                port = await navigator.serial.requestPort();
-                await port.open({ baudRate: 9600 });
-                const info = port.getInfo();
-
-                console.log(info);
 
                 const decoder = new TextDecoderStream();
 
