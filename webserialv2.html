@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <button id="connectButton">Connect via Serial Port</button>
+    <button id="disconnectButton">Connect via Serial Port</button>
+    <div id="target"></div>
+    <script>
+        document.getElementById('connectButton').addEventListener('click', () => {
+            if (navigator.serial) {
+                connectSerial();
+            } else {
+                alert('Web Serial API not supported.');
+            }
+        });
+
+        let port;
+        async function disconnectSerial() {
+            port.close();
+        }
+        async function connectSerial() {
+            const log = document.getElementById('target');
+
+            try {
+                port = await navigator.serial.requestPort();
+                await port.open({ baudRate: 9600 });
+                const info = port.getInfo();
+
+                console.log(info);
+
+                const decoder = new TextDecoderStream();
+
+                port.readable.pipeTo(decoder.writable);
+
+                const inputStream = decoder.readable;
+                const reader = inputStream.getReader();
+
+                while (true) {
+                    var doIt = setInterval(async () => {
+                        console.log("jhjhjhjhjhj")
+                        const { value, done } = await reader.read();
+                        if (value) {
+                            log.textContent += value + '\n';
+                        }
+                        if (done) {
+                            console.log('[readLoop] DONE', done);
+                            reader.releaseLock();
+                            //break;
+                        }
+                    }, 1000);
+                }
+
+            } catch (error) {
+                log.innerHTML = error;
+            }
+        }
+    </script>
+</body>
+
+</html>
