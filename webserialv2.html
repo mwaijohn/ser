@@ -17,10 +17,13 @@
     <script>
         document.getElementById('stream').addEventListener('click', () => {
             console.log("stream button clicked")
+            setInterval(() => {
+                console.log("Serials connecting");
+            }, 1000);
             if (navigator.serial) {
-                setInterval(()=>{
+                setInterval(() => {
                     console.log("Serials connecting");
-                },1000);
+                }, 1000);
 
                 //streamSerial();
             } else {
