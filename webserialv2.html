@@ -16,6 +16,7 @@
     <div id="target"></div>
     <script>
         document.getElementById('stream').addEventListener('click', () => {
+            console.log("stream button clicked")
             if (navigator.serial) {
                 connectSerial();
             } else {
@@ -24,6 +25,7 @@
         });
 
         document.getElementById('connectButton').addEventListener('click', () => {
+            console.log("conect button clicked")
             if (navigator.serial) {
                 connect();
             } else {
@@ -38,6 +40,7 @@
         async function disconnectSerial() {
             port.close();
         }
+
         async function connect() {
             port = await navigator.serial.requestPort();
             await port.open({ baudRate: 9600 });
